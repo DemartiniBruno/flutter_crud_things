@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/things_model.dart';
 import '../../services/things_services.dart';
+import '../category/create_category.dart';
 import 'create_things.dart';
 import 'detail_thing.dart';
 
@@ -31,6 +32,20 @@ class _things extends State<Things>{
       appBar: AppBar(
         backgroundColor: Colors.amber,
         title: Text('Things'),
+        actions: [
+          IconButton(
+              onPressed: (){
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context)=>CreateCategory(),
+                    )
+                );
+              },
+              icon: Icon(Icons.add)
+          )
+        ],
       ),
       body: FutureBuilder<List<Thing>>(
         future: _futureThings,
