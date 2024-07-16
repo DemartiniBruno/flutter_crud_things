@@ -21,17 +21,23 @@ class _createCategoryState extends State<CreateCategory>{
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Text(
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold
+              ),
+              'Cadastre uma Categoria'
+            ),
             SizedBox(
               width: 200,
               child: TextField(
                 controller: _categoryTitle,
                 decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                   hintText: ('Titulo da Categoria'),
                   label: Text('Categoria')
-                ),
-                style: const TextStyle(
-                  fontSize: 20,
                 ),
               )
             ),
@@ -51,7 +57,7 @@ class _createCategoryState extends State<CreateCategory>{
                     });
                   }
                 },
-                child: Text('Salvar'))
+                child: Text('Cadastrar'))
           ],
         ),
       ),

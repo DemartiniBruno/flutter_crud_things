@@ -83,7 +83,7 @@ class _CreateThing extends State<CreateThing>{
                       },
                     );
                   } else {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   }
                 }
               ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import '../models/categories_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 /*
@@ -7,7 +8,7 @@ import 'package:http/http.dart' as http;
 * */
 Future<Category> createCategory(title) async {
   final response = await http.post(
-    Uri.parse('http://192.168.3.221:3000/categories/'),
+    Uri.parse('${dotenv.env['URL']}/categories/'),
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -22,7 +23,7 @@ Future<Category> createCategory(title) async {
 * Get all categories
 * */
 Future<List<Category>> getAllCategories() async {
-  var url = Uri.parse('http://192.168.3.221:3000/categories/');
+  var url = Uri.parse('${dotenv.env['URL']}/categories/');
   final response = await http.get(url, headers: {"Content-Type": "application/json"});
   final List body = json.decode(response.body);
   return body.map((e) => Category.fromJson(e)).toList();

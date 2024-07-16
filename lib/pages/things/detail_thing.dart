@@ -21,13 +21,14 @@ class _detailThingState extends State<DetailThing>{
   TextEditingController _valorAproximado = TextEditingController();
 
   var _selectedValue;
+  var teste;
 
   @override
   void initState(){
     super.initState();
     _futureThing = getOneThing(widget.thingId);
     _futureCategories = getAllCategories();
-    /*_futureCategories = getAllCategories();*/
+    teste=true;
   }
 
   @override
@@ -43,11 +44,19 @@ class _detailThingState extends State<DetailThing>{
           FutureBuilder (
             future: _futureThing,
             builder: (context, snapshot) {
+              print(teste);
               if (snapshot.hasData &&
                 snapshot.connectionState == ConnectionState.done) {
                 _nome.text = '${snapshot.data!.name}';
                 _valorAproximado.text = '${snapshot.data!.value}';
-                _selectedValue = snapshot.data!.categoryId.toString();
+
+                /*
+                * Validador para que não busque o id do banco toda vez que trocar a opção
+                * */
+                if(teste==true){
+                  _selectedValue = snapshot.data!.categoryId.toString();
+                  teste=false;
+                }
 
                 return SizedBox(
                   width: 200,
@@ -68,9 +77,9 @@ class _detailThingState extends State<DetailThing>{
                         ),
                         controller: _nome,
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+
+                      const SizedBox(height: 10),
+
                       TextField(
                         decoration: const InputDecoration(
                             label: Text('Valor'),
@@ -88,17 +97,16 @@ class _detailThingState extends State<DetailThing>{
                                 hint: Text('Categorias'),
                                 value: _selectedValue,
                                 items: snapshot.data!.map((e){
-                                  print('casio ${e.title}');
                                   return DropdownMenuItem(
                                     value: e.id.toString(),
                                     child: Text(e.title.toString()),
                                   );
                                 }).toList(),
                                 onChanged: (value)  async {
+                                  _selectedValue = value;
+                                  await updateThing(_nome.text, _valorAproximado.text, _selectedValue, widget.thingId);
+                                  setState(() {
 
-                                  setState(() async {
-                                    _selectedValue = value;
-                                    await updateThing(_nome.text, _valorAproximado.text, int.parse(_selectedValue), widget.thingId);
                                   });
                                 },
                               );
@@ -117,40 +125,40 @@ class _detailThingState extends State<DetailThing>{
             }
           ),
 
+          const SizedBox(height: 5),
 
-          const SizedBox(
-            height: 5,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: (){
+                  onPressed: ()async{
                     if(_nome.text.isEmpty){
                     } else {
-                      setState(() async {
-                        await deleteThing(widget.thingId);
+                      await deleteThing(widget.thingId);
+                      setState(()  {
                         Navigator.pop(context, true);
                       });
                     }
                   },
-                  child: Icon(Icons.delete)
+                  /*child: Icon(Icons.delete)*/
+                child: Text('Apagar'),
               ),
               const SizedBox(
                 width: 10,
               ),
               ElevatedButton(
-                  onPressed: (){
+                  onPressed: ()async{
                     if(_nome.text.isEmpty){
                     } else {
-                      setState(() async {
-                        await updateThing(_nome.text, _valorAproximado.text, _selectedValue, widget.thingId);
+                      await updateThing(_nome.text, _valorAproximado.text, _selectedValue, widget.thingId);
+                      setState(()  {
                         /*await updateThing(_nome.text, widget.thingId);*/
                         Navigator.pop(context, true);
                       });
                     }
                   },
-                  child: Icon(Icons.save)
+                  /*child: Icon(Icons.save)*/
+                  child: Text('Salvar'),
               ),
             ],
           ),
